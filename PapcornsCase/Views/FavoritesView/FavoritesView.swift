@@ -13,6 +13,26 @@ final class FavoritesViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var favorites: [ContentResponseModel] = []
     private lazy var pageTitle = UILabel()
+    private lazy var noFavoritesLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No Favorites"
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 22)
+        label.isHidden = true
+        return label
+    }()
+    
+    private lazy var noFavoritesLabel2: UILabel = {
+        let label = UILabel()
+        label.text = "Empty. But so full of possibilities."
+        label.textColor = .lightGray
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 17)
+        label.isHidden = true
+        return label
+    }()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,12 +41,29 @@ final class FavoritesViewController: UIViewController {
         setupPageTitle()
         setupCollectionView()
         loadFavorites()
+        configureNoFavorite()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadFavorites()
         collectionView.reloadData()
+        noFavoritesLabel.isHidden = !favorites.isEmpty
+        noFavoritesLabel2.isHidden = !favorites.isEmpty
+    }
+    
+    private func configureNoFavorite() {
+        view.addSubview(noFavoritesLabel)
+        noFavoritesLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+        }
+        view.addSubview(noFavoritesLabel2)
+        noFavoritesLabel2.snp.makeConstraints { make in
+            make.top.equalTo(noFavoritesLabel.snp.bottom).offset(4)
+            make.centerX.equalTo(noFavoritesLabel.snp.centerX)
+        }
     }
     
     private func setupPageTitle() {
@@ -73,6 +110,8 @@ final class FavoritesViewController: UIViewController {
             favorites = savedFavorites
             collectionView.reloadData()
         }
+        noFavoritesLabel.isHidden = !favorites.isEmpty
+        noFavoritesLabel2.isHidden = !favorites.isEmpty
     }
 }
 
